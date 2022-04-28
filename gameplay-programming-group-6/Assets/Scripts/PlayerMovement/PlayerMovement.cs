@@ -38,12 +38,12 @@ public class PlayerMovement : MonoBehaviour
         controls.Player.Disable();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (Mathf.Abs(stickDirection.x) > 0.1f || Mathf.Abs(stickDirection.y) > 0.1f)
         {
             Vector2 m = new Vector2(stickDirection.x, stickDirection.y) * Time.deltaTime * speed;
-            transform.Translate(m.x, 0, m.y);
+            transform.position += new Vector3(m.x, 0, m.y);
         }
 
     }

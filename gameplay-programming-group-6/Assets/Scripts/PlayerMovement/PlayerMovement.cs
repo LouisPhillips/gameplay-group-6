@@ -15,6 +15,10 @@ public class PlayerMovement : MonoBehaviour
     Animator anim;
     HashIDs hash;
 
+    /// Data
+    public int health = 20;
+
+
     /// Power ups
     public SpeedBoost speedBoost;
     public JumpBoost jumpBoost;
@@ -144,7 +148,6 @@ public class PlayerMovement : MonoBehaviour
         }
         else if (doubleJump && !grounded)
         {
-            Debug.Log("double jump");
             GetComponent<Rigidbody>().AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
             doubleJump = false;
             jumpBoost.collected = false;

@@ -10,7 +10,7 @@
                     "type": "Value",
                     "id": "9626754b-adbc-4d2c-b256-49793a8c5bdf",
                     "expectedControlType": "Vector2",
-                    "processors": "",
+                    "processors": "StickDeadzone",
                     "interactions": ""
                 },
                 {
@@ -25,6 +25,14 @@
                     "name": "Jump",
                     "type": "Button",
                     "id": "cbe5edc0-11d4-429d-a990-ac2aa1add2e6",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Sprint",
+                    "type": "Button",
+                    "id": "62c456d2-37b5-4aea-bc99-b43d0a19e8f5",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -154,17 +162,6 @@
                 },
                 {
                     "name": "",
-                    "id": "8c8e490b-c610-4785-884f-f04217b23ca4",
-                    "path": "<Pointer>/delta",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse;Touch",
-                    "action": "Look",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "143bb1cd-cc10-4eca-a2f0-a3664166fe91",
                     "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
@@ -182,6 +179,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7520f794-0095-4a28-b8da-d6b834554158",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Sprint",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Ground
   - Shrunk
+  - Enemy
+  - Slide
+  - EndSlide
   layers:
   - Default
   - TransparentFX

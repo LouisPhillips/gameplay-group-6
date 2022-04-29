@@ -66,6 +66,24 @@ public class PlayerMovement : MonoBehaviour
             transform.position += new Vector3(m.x, 0, m.y);
         }
 
+        RaycastHit hit; 
+        if (Physics.Raycast(transform.position + transform.up, -transform.up, out hit, 1.1f))
+            {
+            grounded = true;
+            falling = false;
+            speed = 2; 
+
+            if (jumpBoost.collected)
+            {
+                doubleJump = true; 
+            }
+            }
+        else
+        {
+            grounded = false;
+            falling = true; 
+        }
+
     }
 
     private void Update()
@@ -119,11 +137,12 @@ public class PlayerMovement : MonoBehaviour
     private void Jump()
     {
         jumpPressed = true;
+
         if(grounded)
         {
             GetComponent<Rigidbody>().AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
         }
-        else if (doubleJump)
+        else if (doubleJump && !grounded)
         {
             Debug.Log("double jump");
             GetComponent<Rigidbody>().AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
@@ -133,43 +152,4 @@ public class PlayerMovement : MonoBehaviour
         
     }
 
-    private void OnCollisionEnter(Collision ground)
-    {
-        jumpPressed = false;
-        if (ground.gameObject.tag == "Ground")
-        {
-            //GetComponent<Animator>().SetBool("Falling", false);
-            falling = false;
-
-            grounded = true;
-
-            speed = 2;
-
-        }
-    }
-
-    private void OnCollisionExit(Collision ground)
-    {
-
-        if (ground.gameObject.tag == "Ground")
-        {
-            if (jumpPressed)
-            {
-                falling = true;
-                if (falling)
-                {
-                    //GetComponent<Animator>().SetBool("Falling", true);
-                    grounded = false;
-
-                }
-            }
-
-            if (jumpBoost.collected)
-            {
-                doubleJump = true;
-            }
-        }
-
-
-    }
 }

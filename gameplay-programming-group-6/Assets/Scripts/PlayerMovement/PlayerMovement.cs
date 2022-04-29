@@ -6,17 +6,20 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
 
-    public float speed;
-    public float jumpPower;
-    public float groundCheckLength;
-
     PlayerControls controls;
     Vector2 stickDirection;
     Animator anim;
     HashIDs hash;
+    Camera cam; 
 
     /// Data
     public int health = 20;
+    private float speed = 5;
+    public float normalSpeed;
+    public float highSpeed;
+    public float jumpPower;
+    public float turnSpeed; 
+    public float groundCheckLength;
 
 
     /// Power ups
@@ -50,6 +53,7 @@ public class PlayerMovement : MonoBehaviour
 
         anim = GetComponent<Animator>();
         hash = GameObject.FindGameObjectWithTag("GameController").GetComponent<HashIDs>();
+        cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>(); 
     }
 
     private void OnEnable()
@@ -66,26 +70,28 @@ public class PlayerMovement : MonoBehaviour
     {
         if (Mathf.Abs(stickDirection.x) > 0.1f || Mathf.Abs(stickDirection.y) > 0.1f)
         {
-            Vector2 m = new Vector2(stickDirection.x, stickDirection.y) * Time.deltaTime * speed;
-            transform.position += new Vector3(m.x, 0, m.y);
+            Vector3 movement = new Vector3(stickDirection.x, 0, stickDirection.y); 
+            movement = Quaternion.Euler(0, cam.transform.eulerAngles.y, 0) * movement;
+            Quaternion yTemp = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement), turnSpeed);
+            transform.rotation = Quaternion.Euler(transform.eulerAngles.x, yTemp.eulerAngles.y, transform.rotation.eulerAngles.z);
+            transform.position += (transform.forward * movement.magnitude * speed * Time.deltaTime);
         }
 
-        RaycastHit hit; 
+        RaycastHit hit;
         if (Physics.Raycast(transform.position + transform.up, -transform.up, out hit, 1.1f))
-            {
+        {
             grounded = true;
             falling = false;
-            speed = 2; 
 
-            if (jumpBoost.collected)
+            if (canJumpBoost)
             {
-                doubleJump = true; 
+                doubleJump = true;
             }
-            }
+        }
         else
         {
             grounded = false;
-            falling = true; 
+            falling = true;
         }
 
     }
@@ -95,18 +101,18 @@ public class PlayerMovement : MonoBehaviour
         if (canSpeedBoost)
         {
             Color color = new Color(0, 50, 255, 255);
-            speed = 8;
+            speed = highSpeed;
         }
         else
         {
-            speed = 5;
+            speed = normalSpeed;
         }
-       
-    
+
+
         //shrink boost
         if (canShrinkBoost)
         {
-          
+
             transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
 
         }
@@ -142,7 +148,7 @@ public class PlayerMovement : MonoBehaviour
     {
         jumpPressed = true;
 
-        if(grounded)
+        if (grounded)
         {
             GetComponent<Rigidbody>().AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
         }
@@ -152,7 +158,7 @@ public class PlayerMovement : MonoBehaviour
             doubleJump = false;
             jumpBoost.collected = false;
         }
-        
+
     }
 
 }

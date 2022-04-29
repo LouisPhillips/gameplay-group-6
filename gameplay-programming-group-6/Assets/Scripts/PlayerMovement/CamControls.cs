@@ -29,11 +29,17 @@ public class CamControls : MonoBehaviour
 
     private void Update()
     {
-        Vector2 c = camStickDirection * camSpeed * Time.deltaTime;
-        transform.LookAt(target); 
 
-        transform.RotateAround(target.transform.position, transform.up, c.x);
-        transform.RotateAround(target.transform.position, transform.right, c.y);
-        transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, 0);  
+        transform.LookAt(target);
+        transform.position = target.position - transform.forward * 5; 
+     /*   Vector2 c = camStickDirection * camSpeed * Time.deltaTime;
+        transform.LookAt(target);
+
+        if (c.x > 0.1f || c.y > 0.1f)
+        {
+            transform.RotateAround(target.transform.position, transform.up, c.x);
+            transform.RotateAround(target.transform.position, transform.right, c.y);
+            transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, 0);
+        }*/
     }
 }

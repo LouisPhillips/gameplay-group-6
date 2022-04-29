@@ -5,7 +5,7 @@ using UnityEngine;
 public class SpeedBoost : MonoBehaviour
 {
     bool collided;
-    public PlayerControls2 player;
+    public PlayerMovement player;
     public bool collected;
     public float time = 0f;
     // Start is called before the first frame update

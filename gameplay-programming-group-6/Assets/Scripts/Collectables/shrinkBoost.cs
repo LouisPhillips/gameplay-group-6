@@ -5,7 +5,7 @@ using UnityEngine;
 public class shrinkBoost : MonoBehaviour
 {
     bool collided;
-    public PlayerControls2 player;
+    public PlayerMovement player;
     public bool collected;
     public GameObject obj;
     public GameObject obj2;

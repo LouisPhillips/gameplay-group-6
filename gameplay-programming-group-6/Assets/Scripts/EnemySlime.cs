@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemySlime : MonoBehaviour
 {
@@ -66,6 +67,7 @@ public class EnemySlime : MonoBehaviour
             Physics.Raycast(transform.position + transform.up, -transform.up, out hit);
             PatrolArea[0] = hit.transform.gameObject;
         }
+    
     }
 
     private void Update()
@@ -263,7 +265,8 @@ public class EnemySlime : MonoBehaviour
                 break;
             case ENEMYSTATE.attacking:
                 transform.LookAt(player);
-                transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y - 90, 0); 
+                transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y - 90, 0);
+
                 break;
         }
 

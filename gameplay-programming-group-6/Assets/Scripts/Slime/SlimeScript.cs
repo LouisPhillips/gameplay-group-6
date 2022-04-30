@@ -45,7 +45,7 @@ public class SlimeScript : MonoBehaviour
     private float damagedTime;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         switch (slime)
         {

@@ -15,7 +15,7 @@ public class SlimeBoss : MonoBehaviour
     NavMeshHit navHit;
 
     private float playerDistance;
-    public float detectionRange = 10f;
+    public float detectionRange = 20f;
     public float wanderRange = 10f;
     private Vector3 wanderTarget;
     private float wanderDelay;
@@ -91,71 +91,12 @@ public class SlimeBoss : MonoBehaviour
                 Destroy(gameObject);
             }
         }
-
-        if (enemiesSpawned < 10 && health == 30)
-        {
-            Instantiate(slimeMinion, new Vector3(gameObject.transform.position.x * 2 + Random.Range(1, 3), gameObject.transform.position.y, gameObject.transform.position.z * 2 + Random.Range(1, 3)), gameObject.transform.rotation);
-            enemiesSpawned += 1;
-        }
-        if (enemiesSpawned < 25 && health == 20)
-        {
-            Instantiate(slimeMinion, new Vector3(gameObject.transform.position.x * 2 + Random.Range(1, 3), gameObject.transform.position.y, gameObject.transform.position.z * 2 + Random.Range(1, 3)), gameObject.transform.rotation);
-            enemiesSpawned += 1;
-        }
-        if (enemiesSpawned < 45 && health == 10)
-        {
-            Instantiate(slimeMinion, new Vector3(gameObject.transform.position.x * 2 + Random.Range(1, 3), gameObject.transform.position.y, gameObject.transform.position.z * 2 + Random.Range(1, 3)), gameObject.transform.rotation);
-            enemiesSpawned += 1;
-        }
-        /*if (health == 30)
-        {
-            if (enemiesSpawned < 10)
-            {
-                Instantiate(slimeMinion, new Vector3(gameObject.transform.position.x * 2 + Random.Range(1, 3), gameObject.transform.position.y, gameObject.transform.position.z * 2 + Random.Range(1, 3)), gameObject.transform.rotation);
-                enemiesSpawned += 1;
-            }
-
-            if (enemiesDestroyed == 10)
-            {
-                bossCanBeDamaged = true;
-                if (health == 20)
-                {
-                    bossCanBeDamaged = false;
-                }
-            }
-        }
-        else if (health == 20)
-        {
-            if (enemiesSpawned < 25)
-            {
-                Instantiate(slimeMinion, new Vector3(gameObject.transform.position.x * 2 + Random.Range(1, 3), gameObject.transform.position.y, gameObject.transform.position.z * 2 + Random.Range(1, 3)), gameObject.transform.rotation);
-                enemiesSpawned += 1;
-            }
-            if (enemiesDestroyed == 25)
-            {
-                bossCanBeDamaged = true;
-                if (health == 10)
-                {
-                    bossCanBeDamaged = false;
-                }
-            }
-        }
-        else if (health == 10)
-        {
-            if (enemiesSpawned < 45)
-            {
-                Instantiate(slimeMinion, new Vector3(gameObject.transform.position.x * 2 + Random.Range(1, 3), gameObject.transform.position.y, gameObject.transform.position.z * 2 + Random.Range(1, 3)), gameObject.transform.rotation);
-                enemiesSpawned += 1;
-            }
-            if (enemiesDestroyed == 45)
-            {
-                bossCanBeDamaged = true;
-            }
-        }
-        else if (health == 0)
+    
+        
+        if (health == 0)
         {
             Destroy(gameObject);
-        }*/
+        }
 
         playerDistance = Vector3.Distance(target.position, gameObject.transform.position);
 
@@ -165,10 +106,6 @@ public class SlimeBoss : MonoBehaviour
             {
                 Debug.Log("Going to back");
                 agent.destination = goBackToPoint.position;
-                /*if (!bossCanBeDamaged)
-                {
-                    agent.destination = goBackToPoint.position;
-                }   */
             }
             else
             {
@@ -176,7 +113,24 @@ public class SlimeBoss : MonoBehaviour
                 agent.destination = target.position;
             }
         }
-
+        if(playerDistance <= detectionRange)
+        {
+            if (enemiesSpawned < 10 && health == 30)
+            {
+                Instantiate(slimeMinion, new Vector3(gameObject.transform.position.x * 2 + Random.Range(1, 3), gameObject.transform.position.y, gameObject.transform.position.z * 2 + Random.Range(1, 3)), gameObject.transform.rotation);
+                enemiesSpawned += 1;
+            }
+            if (enemiesSpawned < 25 && health == 20)
+            {
+                Instantiate(slimeMinion, new Vector3(gameObject.transform.position.x * 2 + Random.Range(1, 3), gameObject.transform.position.y, gameObject.transform.position.z * 2 + Random.Range(1, 3)), gameObject.transform.rotation);
+                enemiesSpawned += 1;
+            }
+            if (enemiesSpawned < 45 && health == 10)
+            {
+                Instantiate(slimeMinion, new Vector3(gameObject.transform.position.x * 2 + Random.Range(1, 3), gameObject.transform.position.y, gameObject.transform.position.z * 2 + Random.Range(1, 3)), gameObject.transform.rotation);
+                enemiesSpawned += 1;
+            }
+        }
         //Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), transform.forward * 3, Color.green);
         Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - 4, transform.position.z), transform.forward * 7, Color.green);
         if (Physics.Raycast(new Vector3(transform.position.x, transform.position.y - 4f, transform.position.z), transform.forward, out playerCast, 7))

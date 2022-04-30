@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8437174643489350540}
   - component: {fileID: 6905444404585378155}
   - component: {fileID: 8865029678763858498}
-  - component: {fileID: 8370101991153335701}
+  - component: {fileID: 4345685668495661557}
   m_Layer: 0
   m_Name: Boss
   m_TagString: Lockable
@@ -29,7 +29,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4246727828083053568}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 9.351107, y: 13.736959, z: 4.1729054}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 10, y: 10, z: 10}
   m_Children: []
   m_Father: {fileID: 82375236033769935}
@@ -120,7 +120,7 @@ NavMeshAgent:
   m_BaseOffset: 0.5
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &8370101991153335701
+--- !u!114 &4345685668495661557
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -129,14 +129,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 4246727828083053568}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 22ce33f0d1046e94a97d193185ee58b6, type: 3}
+  m_Script: {fileID: 11500000, guid: 985f231bbcbc4b34786ff7864cc727a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
-  largeSlime: {fileID: 5870445473177091863, guid: 2d0d12b6a1e34624eb33352195093fcd, type: 3}
-  mediumSlime: {fileID: 1902105681305761444, guid: 4e1f5163c84131a4caf8d12de9638704, type: 3}
-  smallSlime: {fileID: 7378271072685341493, guid: 4e07262632312744fa79e226aeda1416, type: 3}
-  slimeMinion: {fileID: 7378271072685341493, guid: 1cd57eb1a48ea444c9b726feb9601116, type: 3}
+  slimeMinion: {fileID: 0}
+  health_state: 1
   detectionRange: 10
   wanderRange: 10
   wanderEvery: 7
@@ -145,6 +143,7 @@ MonoBehaviour:
   goBackToPoint: {fileID: 0}
   bossAttack: 0
   enemiesDestroyed: 0
+  enemiesSpawned: 0
   attackTime: 2
   hit: 0
   healthy: {fileID: 2100000, guid: 40a24962d399e4f4fa74764150763417, type: 2}

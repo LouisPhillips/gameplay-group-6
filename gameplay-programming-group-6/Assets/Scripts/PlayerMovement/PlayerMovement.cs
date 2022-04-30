@@ -132,24 +132,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
-        Ray aboveRaycast = new Ray(transform.position, transform.TransformDirection(aboveCheck * 3));
-        if (Physics.Raycast(aboveRaycast, out  hit, 3))
-        {
-            if (hit.collider.gameObject.tag == "Shrunk")
-            {
-                canResize = false;
-            }
-        }
-        else
-        {
-            resize += Time.deltaTime;
-            if (resize > 1)
-            {
-                canResize = true;
-                resize = 0f;
-            }
-
-        }
+     
     }
 
     private void Update()
@@ -185,11 +168,29 @@ public class PlayerMovement : MonoBehaviour
 
 
         //shrink boost
-        if (canShrinkBoost)
+        // ray cast must stay in update as raycast must check every frame for shrunk collider 
+        Ray aboveRaycast = new Ray(transform.position, transform.TransformDirection(aboveCheck * 3));
+        if (Physics.Raycast(aboveRaycast, out RaycastHit hit, 3))
         {
+            if (hit.collider.gameObject.tag == "Shrunk")
+            {
 
+                canResize = false;
+            }
+        }
+        else
+        {
+            resize += Time.deltaTime;
+            if (resize > 1)
+            {
+                canResize = true;
+                resize = 0f;
+            }
+
+        }
+        if (canShrinkBoost)
+        { 
             transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
-
         }
         else
         {

@@ -117,7 +117,8 @@ public class SlimeBoss : MonoBehaviour
         {
             if (enemiesSpawned < 10 && health == 30)
             {
-                Instantiate(slimeMinion, new Vector3(gameObject.transform.position.x * 2 + Random.Range(1, 3), gameObject.transform.position.y, gameObject.transform.position.z * 2 + Random.Range(1, 3)), gameObject.transform.rotation);
+                Debug.Log("should sys");
+                Instantiate(slimeMinion, new Vector3(gameObject.transform.position.x / 2, gameObject.transform.position.y, gameObject.transform.position.z * 2 + Random.Range(1, 3)), gameObject.transform.rotation);
                 enemiesSpawned += 1;
             }
             if (enemiesSpawned < 25 && health == 20)

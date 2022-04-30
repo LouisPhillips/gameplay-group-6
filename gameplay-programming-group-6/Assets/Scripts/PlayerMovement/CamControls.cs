@@ -44,7 +44,6 @@ public class CamControls : MonoBehaviour
             transform.rotation = Quaternion.Euler(topAngle, transform.eulerAngles.y, 0); 
         }
 
-        Debug.Log(transform.eulerAngles.x); 
         if (transform.eulerAngles.x < 360 - bottomAngle && transform.eulerAngles.x > 270)
         {
             transform.rotation = Quaternion.Euler(360 - bottomAngle, transform.eulerAngles.y, 0);

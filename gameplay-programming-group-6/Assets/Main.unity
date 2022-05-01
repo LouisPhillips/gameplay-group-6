@@ -24191,7 +24191,7 @@ PrefabInstance:
     - target: {fileID: 1870517013423498056, guid: a5f0404ec1e57c940b54bb3653fadd70, type: 3}
       propertyPath: target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 404258004}
     - target: {fileID: 1870517013423498056, guid: a5f0404ec1e57c940b54bb3653fadd70, type: 3}
       propertyPath: PatrolArea.Array.data[0]
       value: 

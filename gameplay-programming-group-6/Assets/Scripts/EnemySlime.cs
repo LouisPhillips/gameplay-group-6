@@ -75,7 +75,6 @@ public class EnemySlime : MonoBehaviour
             Physics.Raycast(transform.position + transform.up, -transform.up, out hit);
             PatrolArea[0] = hit.transform.gameObject;
         }
-        gameObject.transform.GetComponent<NavMeshAgent>().enabled = false;
     }
 
     private void Update()
@@ -143,7 +142,6 @@ public class EnemySlime : MonoBehaviour
             case ENEMYSTATE.looking:
                 Quaternion test1;
                 Quaternion test2;
-                Debug.Log("Looking");
                 switch (lookingState)
                 {
                     case LOOKINGSTATE.preLook:
@@ -299,14 +297,7 @@ public class EnemySlime : MonoBehaviour
                     transform.Translate(Vector3.forward);
                     
                 }
-                if (Physics.Raycast(new Vector3(transform.position.x, transform.position.y, transform.position.z), transform.right, out playerCast, 5))
-                {
-                    if (playerCast.transform.gameObject.tag == "Player")
-                    {
-                        Attack();
-                    }
-                }
-             
+                Attack();
                 if (found && Vector3.Distance(player.position, transform.position) > 5F)
                 {
                     enemyState = ENEMYSTATE.looking;
@@ -316,21 +307,16 @@ public class EnemySlime : MonoBehaviour
                 break;
         }
         Debug.DrawRay(new Vector3(transform.position.x, transform.position.y, transform.position.z), transform.right * 5, Color.green);
+        Debug.Log(target.GetComponent<PlayerMovement>().health);
     }
     void Attack()
     {
-        Debug.Log(target.GetComponent<PlayerMovement>().takeNoDamage);
-        Debug.Log(target.GetComponent<PlayerMovement>().health);
-        Debug.Log("in function");
         if (canAttack)
         {
-            Debug.Log("in can attack");
             if (target.GetComponent<PlayerMovement>().takeNoDamage == false)
             {
-                Debug.Log("Attack dem");
                 target.GetComponent<PlayerMovement>().health -= 1;
             }
-            //gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z + 1);
             canAttack = false;
         }
     }

@@ -39,6 +39,8 @@ public class SlimeBoss : MonoBehaviour
     public Material damaged;
     private float damagedTime;
 
+    public GameObject ui;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -46,7 +48,7 @@ public class SlimeBoss : MonoBehaviour
         health_state = HealthState.Protected;
         agent = gameObject.transform.GetComponent<NavMeshAgent>();
         target = GetPlayer.call.player.transform;
-
+        ui.SetActive(false);
     }
 
     // Update is called once per frame
@@ -104,7 +106,7 @@ public class SlimeBoss : MonoBehaviour
         {
             if (!bossCanBeDamaged)
             {
-                Debug.Log("Going to back");
+                //Debug.Log("Going to back");
                 agent.destination = goBackToPoint.position;
             }
             else
@@ -115,6 +117,7 @@ public class SlimeBoss : MonoBehaviour
         }
         if(playerDistance <= detectionRange)
         {
+            ui.SetActive(true);
             if (enemiesSpawned < 10 && health == 30)
             {
                 Debug.Log("should sys");
@@ -131,6 +134,10 @@ public class SlimeBoss : MonoBehaviour
                 Instantiate(slimeMinion, new Vector3(gameObject.transform.position.x * 2 + Random.Range(1, 3), gameObject.transform.position.y, gameObject.transform.position.z * 2 + Random.Range(1, 3)), gameObject.transform.rotation);
                 enemiesSpawned += 1;
             }
+        }
+        else
+        {
+            ui.SetActive(false);
         }
         //Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), transform.forward * 3, Color.green);
         Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - 4, transform.position.z), transform.forward * 7, Color.green);

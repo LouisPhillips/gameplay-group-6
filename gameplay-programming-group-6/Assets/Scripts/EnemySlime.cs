@@ -31,6 +31,14 @@ public class EnemySlime : MonoBehaviour
     private float moveLength; 
     private RaycastHit hit;
     private bool found;
+
+    NavMeshAgent agent;
+    public Transform target;
+
+    RaycastHit playerCast;
+    private bool canAttack = true;
+    private float attackDelay = 0f;
+    public float attackTime = 2f;
     private enum ENEMYSTATE
     {
         walking,
@@ -67,11 +75,13 @@ public class EnemySlime : MonoBehaviour
             Physics.Raycast(transform.position + transform.up, -transform.up, out hit);
             PatrolArea[0] = hit.transform.gameObject;
         }
-    
+        gameObject.transform.GetComponent<NavMeshAgent>().enabled = false;
     }
 
     private void Update()
     {
+
+        Debug.Log(enemyState);
         if (enemyState != ENEMYSTATE.attacking)
         {
             if (coneHit)
@@ -89,13 +99,15 @@ public class EnemySlime : MonoBehaviour
                 }
             }
         }
-
+        
         switch (enemyState)
         {
             case ENEMYSTATE.walking:
                 anim.SetBool(hash.slimeMovingState, true);
                 anim.SetBool(hash.slimeIdleState, false);
 
+                transform.LookAt(movementTarget);
+                transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y - 90, 0);
                 if (faster)
                 {
                     speed = Mathf.Lerp(speed, fastSpeed, Time.deltaTime * acceleration);
@@ -114,12 +126,14 @@ public class EnemySlime : MonoBehaviour
                         enemyState = ENEMYSTATE.attacking;
                         anim.SetBool(hash.slimeMovingState, false);
                         anim.SetBool(hash.slimeLockOnState, true);
+                        //gameObject.transform.GetComponent<NavMeshAgent>().enabled = true;
                     }
                     else
                     {
                         anim.SetBool(hash.slimeMovingState, false);
                         anim.SetBool(hash.slimeIdleState, true);
                         enemyState = ENEMYSTATE.looking;
+                        //gameObject.transform.GetComponent<NavMeshAgent>().enabled = false;
                     }
                 }
                 
@@ -129,7 +143,7 @@ public class EnemySlime : MonoBehaviour
             case ENEMYSTATE.looking:
                 Quaternion test1;
                 Quaternion test2;
-
+                Debug.Log("Looking");
                 switch (lookingState)
                 {
                     case LOOKINGSTATE.preLook:
@@ -266,12 +280,60 @@ public class EnemySlime : MonoBehaviour
             case ENEMYSTATE.attacking:
                 transform.LookAt(player);
                 transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y - 90, 0);
+                if (!canAttack)
+                {
+                    attackDelay += Time.deltaTime;
+                    if (attackDelay < attackTime)
+                    {
+                        canAttack = false;
+                    }
+                    else
+                    {
+                        canAttack = true;
+                        attackDelay = 0f;
+                    }
+
+                }
+                if (Physics.BoxCast(transform.position, transform.localScale / 2, player.transform.position - transform.position, transform.rotation, Vector3.Distance(transform.position, player.transform.position) - 3))
+                {
+                    transform.Translate(Vector3.forward);
+                    
+                }
+                if (Physics.Raycast(new Vector3(transform.position.x, transform.position.y, transform.position.z), transform.right, out playerCast, 5))
+                {
+                    if (playerCast.transform.gameObject.tag == "Player")
+                    {
+                        Attack();
+                    }
+                }
+             
+                if (found && Vector3.Distance(player.position, transform.position) > 5F)
+                {
+                    enemyState = ENEMYSTATE.looking;
+                    found = false;
+                }
 
                 break;
         }
-
+        Debug.DrawRay(new Vector3(transform.position.x, transform.position.y, transform.position.z), transform.right * 5, Color.green);
     }
-
+    void Attack()
+    {
+        Debug.Log(target.GetComponent<PlayerMovement>().takeNoDamage);
+        Debug.Log(target.GetComponent<PlayerMovement>().health);
+        Debug.Log("in function");
+        if (canAttack)
+        {
+            Debug.Log("in can attack");
+            if (target.GetComponent<PlayerMovement>().takeNoDamage == false)
+            {
+                Debug.Log("Attack dem");
+                target.GetComponent<PlayerMovement>().health -= 1;
+            }
+            //gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z + 1);
+            canAttack = false;
+        }
+    }
     public void SpeedUp()
     {
         faster = true;

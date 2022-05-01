@@ -26,6 +26,6 @@ public class CollisionDetection : MonoBehaviour
         transform.position = slime.transform.position;
         transform.rotation = slime.transform.rotation;
         transform.Rotate(new Vector3(0, 0, 90));
-        transform.Translate(Vector3.down * 18f); 
+        transform.Translate(Vector3.down * (transform.localScale.y / 22)); 
     }
 }

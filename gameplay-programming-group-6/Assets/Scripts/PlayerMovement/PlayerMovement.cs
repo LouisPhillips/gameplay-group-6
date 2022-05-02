@@ -83,9 +83,13 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (stickDirection.y > 0.1)
+        {
+
+        }
         RaycastHit hit;
 
-        slidingGrounded = Physics.Raycast(transform.position + transform.up, -transform.up, out hit, 1.5f); 
+        slidingGrounded = Physics.Raycast(transform.position + transform.up, -transform.up, out hit, 1.5f);     
         if (Physics.Raycast(transform.position + transform.up, -transform.up, out hit, 1.1f))
         {
             grounded = true;
@@ -200,6 +204,12 @@ public class PlayerMovement : MonoBehaviour
                 transform.localScale = new Vector3(1, 1, 1);
                 shrinkBoost.resized = true;
             }
+        }
+
+        if(health <= 0)
+        {
+            transform.position = respawnPoint;
+            health = 20;
         }
     }
 

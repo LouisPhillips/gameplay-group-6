@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 52613568844541965}
   - component: {fileID: 6310907906788115039}
   - component: {fileID: 5476249503490041986}
-  - component: {fileID: 171135198649456612}
+  - component: {fileID: 3823602071464439214}
   m_Layer: 0
   m_Name: Slime
   m_TagString: Lockable
@@ -137,32 +137,26 @@ NavMeshAgent:
   m_BaseOffset: 0.5
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &171135198649456612
+--- !u!114 &3823602071464439214
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1837573040606828819}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6196bbcefaf1e9a46b6ca28fb7815565, type: 3}
+  m_Script: {fileID: 11500000, guid: f31520fb8dfcb014dbd1cf247ac79390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
-  slime: 4
-  slimeBoss: {fileID: 0}
-  largeSlime: {fileID: 0}
-  mediumSlime: {fileID: 0}
-  smallSlime: {fileID: 0}
-  slimeMinion: {fileID: 7378271072685341493}
+  slimeMinion: {fileID: 1837573040606828819}
   detectionRange: 10
   wanderRange: 10
   wanderEvery: 7
+  slimeBoss: {fileID: 0}
   bossCanBeDamaged: 0
   target: {fileID: 0}
-  bossAttack: 0
-  enemiesDestroyed: 0
   attackTime: 2
   hit: 0
   healthy: {fileID: 2100000, guid: 40a24962d399e4f4fa74764150763417, type: 2}
@@ -176,8 +170,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3029953577454135807}
+  - component: {fileID: 4317630533612587678}
   m_Layer: 0
-  m_Name: SmallMinion
+  m_Name: SmallMinion 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -198,3 +193,27 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4317630533612587678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7378271072685341493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f31520fb8dfcb014dbd1cf247ac79390, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 0
+  slimeMinion: {fileID: 1837573040606828819}
+  detectionRange: 10
+  wanderRange: 10
+  wanderEvery: 7
+  slimeBoss: {fileID: 0}
+  bossCanBeDamaged: 0
+  target: {fileID: 0}
+  attackTime: 2
+  hit: 0
+  healthy: {fileID: 2100000, guid: 40a24962d399e4f4fa74764150763417, type: 2}
+  damaged: {fileID: 2100000, guid: dc037b7d64c699f408599a2c9e71f211, type: 2}

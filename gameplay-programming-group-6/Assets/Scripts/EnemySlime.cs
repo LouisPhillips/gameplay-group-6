@@ -79,8 +79,6 @@ public class EnemySlime : MonoBehaviour
 
     private void Update()
     {
-
-        Debug.Log(enemyState);
         if (enemyState != ENEMYSTATE.attacking)
         {
             if (coneHit)
@@ -307,7 +305,6 @@ public class EnemySlime : MonoBehaviour
                 break;
         }
         Debug.DrawRay(new Vector3(transform.position.x, transform.position.y, transform.position.z), transform.right * 5, Color.green);
-        Debug.Log(target.GetComponent<PlayerMovement>().health);
     }
     void Attack()
     {

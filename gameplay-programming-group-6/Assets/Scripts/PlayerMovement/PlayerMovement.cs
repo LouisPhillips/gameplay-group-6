@@ -26,7 +26,8 @@ public class PlayerMovement : MonoBehaviour
     public float turnSpeed;
     public float groundCheckLength;
     private bool sliding;
-    public PhysicMaterial mat; 
+    public PhysicMaterial mat;
+    public Vector3 respawnPoint;
 
 
     /// Power ups

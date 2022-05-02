@@ -457,4 +457,9 @@ public class SlimeScript : MonoBehaviour
 
         return navMeshHit.position;
     }
+
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
+    }
 }

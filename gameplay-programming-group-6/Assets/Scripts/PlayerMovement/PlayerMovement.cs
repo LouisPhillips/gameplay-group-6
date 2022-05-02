@@ -61,6 +61,7 @@ public class PlayerMovement : MonoBehaviour
     private bool doubleJump = false;
 
     public bool takeNoDamage = false;
+
     private void Awake()
     {
         controls = new PlayerControls();
@@ -72,6 +73,7 @@ public class PlayerMovement : MonoBehaviour
 
         controls.Player.Sprint.performed += context => sprint = true;
         controls.Player.Sprint.canceled += context => sprint = false;
+
 
 
         anim = GetComponent<Animator>();
@@ -186,7 +188,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(health); 
         healthLoss();
         if (lockOn)
         {

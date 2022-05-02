@@ -78,7 +78,6 @@ public class PlayerMovement : MonoBehaviour
         hash = GameObject.FindGameObjectWithTag("GameController").GetComponent<HashIDs>();
         cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         physMat = GetComponent<CapsuleCollider>().material; 
-
         foreach (Transform child in transform)
         {
             switch (child.name)

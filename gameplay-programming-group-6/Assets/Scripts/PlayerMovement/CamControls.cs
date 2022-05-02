@@ -134,8 +134,7 @@ public class CamControls : MonoBehaviour
                 float angleDiff = Vector3.SignedAngle(transform.forward, diff, transform.up);
                 float curDistance = diff.sqrMagnitude;
                 if (curDistance < maxLockOnDistance + 100)
-                {
-                    Debug.Log(angleDiff * Mathf.Sign(camStickDirection.x)); 
+                { 
                     if ((lockOnTarget == null ||angleDiff * Mathf.Sign(camStickDirection.x) > 0) && Mathf.Abs(angleDiff) < angle)
                     {
                         closest = go;

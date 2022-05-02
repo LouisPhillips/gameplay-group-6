@@ -58,7 +58,7 @@ public class PlayerMovement : MonoBehaviour
     private bool grounded;
     private bool slidingGrounded;
     private bool falling;
-    private bool doubleJump;
+    private bool doubleJump = false;
 
     public bool takeNoDamage = false;
     private void Awake()
@@ -77,7 +77,6 @@ public class PlayerMovement : MonoBehaviour
         anim = GetComponent<Animator>();
         hash = GameObject.FindGameObjectWithTag("GameController").GetComponent<HashIDs>();
         cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
-
         foreach (Transform child in transform)
         {
             switch (child.name)
@@ -122,8 +121,8 @@ public class PlayerMovement : MonoBehaviour
         }
         RaycastHit hit;
 
-        slidingGrounded = Physics.Raycast(transform.position + transform.up, -transform.up, out hit, 1.5f);     
-        if (Physics.Raycast(transform.position + transform.up, -transform.up, out hit, 1.1f))
+        slidingGrounded = Physics.Raycast(transform.position + transform.up, -transform.up, out hit, 1.5f);
+        if (Physics.Raycast(transform.position + transform.up / 10, -transform.up, out hit, .2f))
         {
             grounded = true;
             falling = false;
@@ -186,13 +185,13 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        Debug.Log(health); 
         healthLoss();
         if (lockOn)
         {
             transform.Translate(stickDirection.x * speed * Time.deltaTime, 0, stickDirection.y * speed * Time.deltaTime);
         }
         else {
-            Debug.Log(sliding); 
             if ((Mathf.Abs(stickDirection.x) > 0.1f || Mathf.Abs(stickDirection.y) > 0.1f) && !sliding)
             {
                 Vector3 movement = new Vector3(stickDirection.x, 0, stickDirection.y);
@@ -277,8 +276,7 @@ public class PlayerMovement : MonoBehaviour
     private void Jump()
     {
         jumpPressed = true;
-
-        if (grounded || slidingGrounded)
+        if (grounded || (slidingGrounded && sliding))
         {
             GetComponent<Rigidbody>().AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
         }
@@ -286,9 +284,8 @@ public class PlayerMovement : MonoBehaviour
         {
             GetComponent<Rigidbody>().AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
             doubleJump = false;
-            jumpBoost.collected = false;
+            canJumpBoost = false;
         }
-
     }
 
     private void healthLoss()

@@ -13,6 +13,8 @@ public class ShieldBoost : MonoBehaviour
     void Start()
     {
         bubble.GetComponent<MeshRenderer>().enabled = false;
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
+
     }
 
     // Update is called once per frame

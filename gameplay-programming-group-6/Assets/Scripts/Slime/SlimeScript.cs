@@ -29,7 +29,6 @@ public class SlimeScript : MonoBehaviour
     public bool bossCanBeDamaged = false;
 
     public Transform target;
-    public Transform goBackToPoint;
     public bool bossAttack;
     public int enemiesDestroyed = 0;
     int enemiesSpawned = 0;
@@ -79,13 +78,12 @@ public class SlimeScript : MonoBehaviour
 
         agent = gameObject.transform.GetComponent<NavMeshAgent>();
         target = GetPlayer.call.player.transform;
-
+        slimeBoss = GameObject.FindGameObjectWithTag("Boss");
     }
 
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(enemiesDestroyed);
         switch (slime)
         {
             case slimeType.Small:
@@ -205,7 +203,7 @@ public class SlimeScript : MonoBehaviour
                         if (!bossCanBeDamaged)
                         {
                             Debug.Log("Going to back");
-                            agent.destination = goBackToPoint.position;
+                
                             /*if (!bossCanBeDamaged)
                             {
                                 agent.destination = goBackToPoint.position;
@@ -257,7 +255,7 @@ public class SlimeScript : MonoBehaviour
 
         }
 
-        //Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), transform.forward * 3, Color.green);
+       
         switch (slime)
         {
             case slimeType.Boss:
@@ -307,9 +305,10 @@ public class SlimeScript : MonoBehaviour
                 }
             case slimeType.Minion:
                 {
-                    if (Physics.Raycast(new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), transform.forward, out playerCast, 3))
+                    Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), transform.forward * 3, Color.green);
+                    if (Physics.Raycast(new Vector3(transform.position.x, transform.position.y + 0.1f, transform.position.z), transform.forward, out RaycastHit minion, 3))
                     {
-                        if (playerCast.transform.gameObject.tag == "Player")
+                        if (minion.transform.gameObject.tag == "Player")
                         {
                             Attack();
                         }

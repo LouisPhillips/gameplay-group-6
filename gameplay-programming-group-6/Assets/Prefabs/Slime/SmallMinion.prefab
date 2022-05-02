@@ -161,7 +161,6 @@ MonoBehaviour:
   wanderEvery: 7
   bossCanBeDamaged: 0
   target: {fileID: 0}
-  goBackToPoint: {fileID: 0}
   bossAttack: 0
   enemiesDestroyed: 0
   attackTime: 2

@@ -40,6 +40,7 @@ public class SlimeBoss : MonoBehaviour
     private float damagedTime;
 
     public GameObject ui;
+    public Transform slimeMinionSpawn;
 
     // Start is called before the first frame update
     void Start()
@@ -120,18 +121,17 @@ public class SlimeBoss : MonoBehaviour
             ui.SetActive(true);
             if (enemiesSpawned < 10 && health == 30)
             {
-                Debug.Log("should sys");
-                Instantiate(slimeMinion, new Vector3(gameObject.transform.position.x / 2, gameObject.transform.position.y, gameObject.transform.position.z * 2 + Random.Range(1, 3)), gameObject.transform.rotation);
+                Instantiate(slimeMinion, slimeMinionSpawn.position, gameObject.transform.rotation);
                 enemiesSpawned += 1;
             }
             if (enemiesSpawned < 25 && health == 20)
             {
-                Instantiate(slimeMinion, new Vector3(gameObject.transform.position.x * 2 + Random.Range(1, 3), gameObject.transform.position.y, gameObject.transform.position.z * 2 + Random.Range(1, 3)), gameObject.transform.rotation);
+                Instantiate(slimeMinion, slimeMinionSpawn.position, gameObject.transform.rotation);
                 enemiesSpawned += 1;
             }
             if (enemiesSpawned < 45 && health == 10)
             {
-                Instantiate(slimeMinion, new Vector3(gameObject.transform.position.x * 2 + Random.Range(1, 3), gameObject.transform.position.y, gameObject.transform.position.z * 2 + Random.Range(1, 3)), gameObject.transform.rotation);
+                Instantiate(slimeMinion, slimeMinionSpawn.position , gameObject.transform.rotation);
                 enemiesSpawned += 1;
             }
         }

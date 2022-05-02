@@ -11,7 +11,8 @@ public class Portal : MonoBehaviour
         if (other.tag == "Player")
         {
             other.transform.position = target.transform.position;
-            other.transform.rotation = target.transform.rotation; 
+            other.transform.rotation = target.transform.rotation;
+            other.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
         }
     }
 }

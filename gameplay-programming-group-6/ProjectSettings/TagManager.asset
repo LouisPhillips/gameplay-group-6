@@ -9,6 +9,8 @@ TagManager:
   - Enemy
   - Slide
   - EndSlide
+  - Lockable
+  - Boss
   layers:
   - Default
   - TransparentFX

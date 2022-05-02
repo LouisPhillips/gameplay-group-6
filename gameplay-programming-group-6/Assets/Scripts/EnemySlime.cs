@@ -79,10 +79,9 @@ public class EnemySlime : MonoBehaviour
 
     private void Update()
     {
-
-        Debug.Log(enemyState);
         if (enemyState != ENEMYSTATE.attacking)
         {
+            anim.SetBool(hash.slimeLockOnState, false); 
             if (coneHit)
             {
                 Vector3 dir = (player.transform.position - transform.position).normalized;
@@ -301,13 +300,13 @@ public class EnemySlime : MonoBehaviour
                 if (found && Vector3.Distance(player.position, transform.position) > 5F)
                 {
                     enemyState = ENEMYSTATE.looking;
+                    anim.SetBool(hash.slimeLockOnState, false); 
                     found = false;
                 }
 
                 break;
         }
         Debug.DrawRay(new Vector3(transform.position.x, transform.position.y, transform.position.z), transform.right * 5, Color.green);
-        Debug.Log(target.GetComponent<PlayerMovement>().health);
     }
     void Attack()
     {

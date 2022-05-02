@@ -7,26 +7,33 @@ public class PlayerMovement : MonoBehaviour
 {
 
     PlayerControls controls;
-   
+
     Animator anim;
     HashIDs hash;
     Camera cam;
 
     /// Controls
     Vector2 stickDirection;
-    bool sprint; 
+    bool sprint;
 
     /// Data
     public int health = 20;
+    private int lastHealth = 20;
+    private bool hit = false; 
+    private float hitTimer;
+    private float regenTimer;
+    private bool regenerating; 
     private float speed = 5;
     public float normalSpeed;
     public float highSpeed;
-    public float sprintSpeed; 
+    public float sprintSpeed;
     public float jumpPower;
     public float turnSpeed;
     public float groundCheckLength;
-    private bool sliding;
-    public PhysicMaterial mat;
+    private bool sliding = false;
+    public PhysicMaterial physMat;
+    private Renderer renderer;
+    public bool lockOn; 
     public Vector3 respawnPoint;
 
 
@@ -42,11 +49,14 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 aboveCheck = Vector3.up;
     public bool canResize = false;
     private float resize = 0f;
+    private ParticleSystem regenSys;
+    private ParticleSystem jumpSys;
+    private ParticleSystem speedSys; 
 
     /// Jump
     private bool jumpPressed = false;
     private bool grounded;
-    private bool slidingGrounded; 
+    private bool slidingGrounded;
     private bool falling;
     private bool doubleJump;
 
@@ -61,12 +71,35 @@ public class PlayerMovement : MonoBehaviour
         controls.Player.Jump.performed += context => Jump();
 
         controls.Player.Sprint.performed += context => sprint = true;
-        controls.Player.Sprint.canceled += context => sprint = false; 
+        controls.Player.Sprint.canceled += context => sprint = false;
 
 
         anim = GetComponent<Animator>();
         hash = GameObject.FindGameObjectWithTag("GameController").GetComponent<HashIDs>();
         cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+
+        foreach (Transform child in transform)
+        {
+            switch (child.name)
+            {
+                case "RPG-Character-Mesh": 
+                renderer = child.GetComponent<Renderer>();
+                    break;
+                case "SpeedEffect":
+                    speedSys = child.GetComponent<ParticleSystem>();
+                    speedSys.Stop(); 
+                    break;
+                case "JumpEffect":
+                    jumpSys = child.GetComponent<ParticleSystem>();
+                    jumpSys.Stop();
+                    break;
+                case "RegenEffect":
+                    regenSys = child.GetComponent<ParticleSystem>();
+                    regenSys.Stop();
+                    break;
+
+            }
+        }
     }
 
     private void OnEnable()
@@ -85,7 +118,7 @@ public class PlayerMovement : MonoBehaviour
     {
         RaycastHit hit;
 
-        slidingGrounded = Physics.Raycast(transform.position + transform.up, -transform.up, out hit, 1.5f); 
+        slidingGrounded = Physics.Raycast(transform.position + transform.up, -transform.up, out hit, 1.5f);
         if (Physics.Raycast(transform.position + transform.up, -transform.up, out hit, 1.1f))
         {
             grounded = true;
@@ -94,6 +127,15 @@ public class PlayerMovement : MonoBehaviour
             if (canJumpBoost)
             {
                 doubleJump = true;
+
+                if (jumpSys.isStopped)
+                {
+                    jumpSys.Play(); 
+                }
+            }
+            else if (jumpSys.isPlaying)
+            {
+                jumpSys.Stop(); 
             }
         }
         else
@@ -107,60 +149,79 @@ public class PlayerMovement : MonoBehaviour
         if (hit.transform.tag == "Slide")
         {
             transform.rotation = Quaternion.Euler(transform.eulerAngles.x, hit.transform.eulerAngles.y, transform.eulerAngles.z);
+            physMat.staticFriction = 0;
+            physMat.dynamicFriction = 0;
+            physMat.bounciness = 0;
+            physMat.frictionCombine = PhysicMaterialCombine.Minimum;
+            physMat.bounceCombine = PhysicMaterialCombine.Minimum;
 
             if (sliding == false)
             {
-                GetComponent<Rigidbody>().AddForce((transform.forward - transform.up) * 5, ForceMode.Impulse); 
+                GetComponent<Rigidbody>().AddForce((transform.forward - transform.up) * 5, ForceMode.Impulse);
             }
 
-          
-            sliding = true; 
-            mat.staticFriction = 0;
-            mat.dynamicFriction = 0;
-            mat.bounciness = 0;
-            mat.frictionCombine = PhysicMaterialCombine.Minimum;
-            mat.bounceCombine = PhysicMaterialCombine.Minimum; 
+            sliding = true;
+           
         }
         else if (hit.transform.tag == "EndSlide")
         {
             sliding = false;
-            mat.staticFriction = 0.6f;
-            mat.dynamicFriction = 0.6f;
-            mat.bounciness = 0;
-            mat.frictionCombine = PhysicMaterialCombine.Average;
-            mat.bounceCombine = PhysicMaterialCombine.Average;
+            physMat.staticFriction = 0.6f;
+            physMat.dynamicFriction = 0.6f;
+            physMat.bounciness = 0;
+            physMat.frictionCombine = PhysicMaterialCombine.Average;
+            physMat.bounceCombine = PhysicMaterialCombine.Average;
 
         }
+        if (!slidingGrounded && GetComponent<Rigidbody>().velocity.y < -10 && !takeNoDamage)
+        {
+            health += -1;
+        }
 
-
-     
     }
 
     private void Update()
     {
-        if ((Mathf.Abs(stickDirection.x) > 0.1f || Mathf.Abs(stickDirection.y) > 0.1f) && !sliding)
+        healthLoss();
+        if (lockOn)
         {
-            Vector3 movement = new Vector3(stickDirection.x, 0, stickDirection.y);
-            movement = Quaternion.Euler(0, cam.transform.eulerAngles.y, 0) * movement;
-            Quaternion yTemp = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement), turnSpeed);
-            transform.rotation = Quaternion.Euler(transform.eulerAngles.x, yTemp.eulerAngles.y, transform.rotation.eulerAngles.z);
-            transform.position += (transform.forward * movement.magnitude * speed * Time.deltaTime);
+            transform.Translate(stickDirection.x * speed * Time.deltaTime, 0, stickDirection.y * speed * Time.deltaTime);
         }
-        else if ((sliding && !slidingGrounded) || sliding && Mathf.Abs(stickDirection.x) > 0.1f)
+        else {
+            Debug.Log(sliding); 
+            if ((Mathf.Abs(stickDirection.x) > 0.1f || Mathf.Abs(stickDirection.y) > 0.1f) && !sliding)
+            {
+                Vector3 movement = new Vector3(stickDirection.x, 0, stickDirection.y);
+                movement = Quaternion.Euler(0, cam.transform.eulerAngles.y, 0) * movement;
+                Quaternion yTemp = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement), turnSpeed);
+                transform.rotation = Quaternion.Euler(transform.eulerAngles.x, yTemp.eulerAngles.y, transform.rotation.eulerAngles.z);
+                transform.position += (transform.forward * movement.magnitude * speed * Time.deltaTime);
+            }
+            else if (sliding && Mathf.Abs(stickDirection.x) > 0.1f)
+            {
+                Vector3 movement = new Vector3(stickDirection.x, 0, stickDirection.y);
+                movement = Quaternion.Euler(0, cam.transform.eulerAngles.y, 0) * movement;
+                transform.position += new Vector3(movement.x * Time.deltaTime * speed, 0, 0);
+            }
+        }
+
+        if (!canSpeedBoost && speedSys.isPlaying)
         {
-            Vector3 movement = new Vector3(stickDirection.x, 0, stickDirection.y);
-            movement = Quaternion.Euler(0, cam.transform.eulerAngles.y, 0) * movement;
-            transform.position += new Vector3(movement.x * Time.deltaTime * speed, 0, 0); 
+            speedSys.Stop(); 
         }
 
         if (canSpeedBoost)
         {
+            if (speedSys.isStopped)
+            {
+                speedSys.Play(); 
+            }
             Color color = new Color(0, 50, 255, 255);
             speed = highSpeed;
         }
         else if (sprint)
         {
-            speed = sprintSpeed; 
+            speed = sprintSpeed;
         }
         else
         {
@@ -190,7 +251,7 @@ public class PlayerMovement : MonoBehaviour
 
         }
         if (canShrinkBoost)
-        { 
+        {
             transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
         }
         else
@@ -220,4 +281,59 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
+    private void healthLoss()
+    {
+        if (lastHealth != health)
+        {
+            renderer.material.SetColor("_Color", Color.red);
+            hit = true;
+            regenTimer = 0; 
+        }
+        if (hit)
+        {
+            hitTimer += Time.deltaTime;
+            takeNoDamage = true;
+        }
+        else if (health < 20)
+        {
+            regenTimer += Time.deltaTime; 
+        }
+        if (hitTimer > 0.5f)
+        {
+            hitTimer = 0;
+            takeNoDamage = false;
+            hit = false; 
+            renderer.material.SetColor("_Color", Color.white);
+        }
+        if (regenTimer > 10)
+        {
+            regenerating = true; 
+        }
+
+        if (regenerating)
+        {
+            regenTimer += Time.deltaTime; 
+            if (regenTimer > 1f)
+            {
+                health += 1;
+                regenTimer = 0; 
+            }
+            if (health == 20)
+            {
+                regenTimer = 0;
+                regenerating = false; 
+            }
+
+            if (regenSys.isStopped)
+            {
+                regenSys.Play(); 
+            }
+        }
+        else if (regenSys.isPlaying)
+        {
+            regenSys.Stop(); 
+        }
+
+        lastHealth = health; 
+    }
 }

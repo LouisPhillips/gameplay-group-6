@@ -15,6 +15,7 @@ public class shrinkBoost : MonoBehaviour
     void Start()
     {
         resized = false;
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>(); 
     }
 
     // Update is called once per frame

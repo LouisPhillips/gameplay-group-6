@@ -8,6 +8,7 @@ public class GoToRespawn : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("enter");
         player.transform.position = player.respawnPoint;
     }
 }

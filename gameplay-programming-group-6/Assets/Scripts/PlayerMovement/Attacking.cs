@@ -8,7 +8,8 @@ public class Attacking : MonoBehaviour
     public Animator animator;
     public Transform attackPoint;
     public LayerMask enemyLayers;
-
+    public LayerMask bossLayer;
+    public LayerMask newLayer;
     public float attackRange = 0.5f;
     public int attackDamage = 1;
 
@@ -30,11 +31,26 @@ public class Attacking : MonoBehaviour
         animator.SetTrigger("Attack");
         //deteckt enemies
         Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, attackRange, enemyLayers);
+        Collider[] bossHit = Physics.OverlapSphere(attackPoint.position, attackDamage, bossLayer);
+        Collider[] newSlimes = Physics.OverlapSphere(attackPoint.position, attackDamage, newLayer);
         //damage
         foreach (Collider enemy in hitEnemies)
         {
-            Debug.Log(enemy.GetComponent<SlimeScript>().health);
             enemy.GetComponent<SlimeScript>().TakeDamage(attackDamage);
+            
+        }
+        foreach (Collider newslime in newSlimes)
+        {
+            newslime.GetComponent<EnemySlime>().health -= 1;
+            newslime.GetComponent<EnemySlime>().hit_slime = true;
+        }
+        foreach (Collider boss in bossHit)
+        {
+            if(boss.GetComponent<SlimeBoss>().bossCanBeDamaged)
+            {
+                boss.GetComponent<SlimeBoss>().health -= 1;
+            }
+            
         }
     }
 

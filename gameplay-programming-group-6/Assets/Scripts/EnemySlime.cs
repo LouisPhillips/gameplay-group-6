@@ -39,6 +39,14 @@ public class EnemySlime : MonoBehaviour
     private bool canAttack = true;
     private float attackDelay = 0f;
     public float attackTime = 2f;
+
+    public int health = 10;
+
+    private float damagedTime = 0;
+    public bool hit_slime = false;
+
+    public Material healthy;
+    public Material damaged;
     private enum ENEMYSTATE
     {
         walking,
@@ -79,6 +87,30 @@ public class EnemySlime : MonoBehaviour
 
     private void Update()
     {
+        if(health <= 0)
+        {
+            Destroy(transform.parent.gameObject);
+        }
+
+        if (hit_slime)
+        {
+            damagedTime += Time.deltaTime;
+            if (damagedTime < 0.1)
+            {
+                gameObject.GetComponent<MeshRenderer>().material = healthy;
+            }
+            else if (damagedTime < 0.2 && damagedTime > 0.1)
+            {
+                gameObject.GetComponent<MeshRenderer>().material = damaged;
+            }
+            else if (damagedTime > 0.2)
+            {
+                gameObject.GetComponent<MeshRenderer>().material = healthy;
+                damagedTime = 0f;
+                hit_slime = false;
+            }
+        }
+
         if (enemyState != ENEMYSTATE.attacking)
         {
             anim.SetBool(hash.slimeLockOnState, false); 

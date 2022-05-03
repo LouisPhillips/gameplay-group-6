@@ -11,6 +11,7 @@ TagManager:
   - EndSlide
   - Lockable
   - Boss
+  - Switch
   layers:
   - Default
   - TransparentFX

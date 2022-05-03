@@ -97,15 +97,15 @@ public class EnemySlime : MonoBehaviour
             damagedTime += Time.deltaTime;
             if (damagedTime < 0.1)
             {
-                gameObject.GetComponent<MeshRenderer>().material = healthy;
+                gameObject.GetComponent<MeshRenderer>().material.SetColor("_Color", Color.white);
             }
             else if (damagedTime < 0.2 && damagedTime > 0.1)
             {
-                gameObject.GetComponent<MeshRenderer>().material = damaged;
+                gameObject.GetComponent<MeshRenderer>().material.SetColor("_Color", Color.red); 
             }
             else if (damagedTime > 0.2)
             {
-                gameObject.GetComponent<MeshRenderer>().material = healthy;
+                gameObject.GetComponent<MeshRenderer>().material.SetColor("_Color", Color.white);
                 damagedTime = 0f;
                 hit_slime = false;
             }

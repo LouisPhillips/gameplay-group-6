@@ -91,7 +91,7 @@ public class SlimeBoss : MonoBehaviour
             health_state = HealthState.Damagable;
             if (health == 0)
             {
-                Destroy(gameObject);
+                Application.Quit(); 
             }
         }
     

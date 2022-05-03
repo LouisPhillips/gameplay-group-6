@@ -13,6 +13,7 @@ public class Attacking : MonoBehaviour
     public LayerMask newLayer;
     public float attackRange = 0.5f;
     public int attackDamage = 1;
+    public int SwitchesUsed = 0;
 
     bool attacking;
 
@@ -32,6 +33,12 @@ public class Attacking : MonoBehaviour
         }
 
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+    }
+
+    private void Update()
+    {
+        Debug.Log(animator.GetCurrentAnimatorStateInfo(0).IsName("Attack")); 
+        GetComponent<BoxCollider>().enabled = animator.GetCurrentAnimatorStateInfo(0).IsName("Attack");
     }
 
     public void Hit()
@@ -67,7 +74,12 @@ public class Attacking : MonoBehaviour
         if (other.tag == "Switch" && other.GetComponent<CutsceneSwitch>().used == false)
         {
             other.GetComponent<CutsceneSwitch>().PlayTimeline();
-            other.GetComponent<CutsceneSwitch>().SwitchCount += 1;
+            SwitchesUsed += 1;
+            if (SwitchesUsed == 3)
+            {
+                other.GetComponent<CutsceneSwitch>().allSwitch = true;
+            }
+            other.GetComponent<CutsceneSwitch>().used = true;
         }
         
         if (other.tag == "Enemy")
@@ -79,11 +91,15 @@ public class Attacking : MonoBehaviour
             }
             else if (other.GetComponent<SlimeBoss>())
             {
-                other.GetComponent<SlimeBoss>().health -= 1; 
+                if (other.GetComponent<SlimeBoss>().bossCanBeDamaged)
+                {
+                    other.GetComponent<SlimeBoss>().health -= 1;
+                }
             }
             else if (other.GetComponent<SlimeScript>())
             {
                 other.GetComponent<SlimeScript>().TakeDamage(attackDamage);
+                GameObject.Find("Boss").GetComponent<SlimeBoss>().enemiesDestroyed += 1; 
             }
         }    
     }

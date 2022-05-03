@@ -239,11 +239,7 @@ public class PlayerMovement : MonoBehaviour
         Ray aboveRaycast = new Ray(transform.position, transform.TransformDirection(aboveCheck * 3));
         if (Physics.Raycast(aboveRaycast, out RaycastHit hit, 3))
         {
-            if (hit.collider.gameObject.tag == "Shrunk")
-            {
-
-                canResize = false;
-            }
+             canResize = false;
         }
         else
         {
@@ -262,7 +258,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            if (canResize && shrinkBoost)
+            if (canResize)
             {
                 transform.localScale = new Vector3(1, 1, 1);
             }

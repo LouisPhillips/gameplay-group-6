@@ -14,28 +14,14 @@ public class Attacking : MonoBehaviour
     public float attackRange = 0.5f;
     public int attackDamage = 1;
 
-    public bool atSwitch = false;
-    public GameObject CurSwitch;
-    public CutsceneSwitch SwitchInstance;
-    public int SwitchLimit;
-
     bool attacking;
 
     PlayerControls controls;
     private void Awake()
     {
+        attackPoint = transform; 
         controls = new PlayerControls();
         sphererigidbody = GetComponent<Rigidbody>();
-    }
-
-    private void Update()
-    {
-        
-    }
-    public void Attack()
-    {
-       
-
     }
 
     private void OnDrawGizmosSelected()
@@ -48,18 +34,9 @@ public class Attacking : MonoBehaviour
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);
     }
 
-   public void Hit()
+    public void Hit()
     {
-        //play animation
-        animator.SetTrigger("Attack");
-
-        if (atSwitch)
-        {
-            SwitchInstance.PlayTimeline();
-            SwitchInstance.SwitchCount += 1;
-        }
-
-        //detect enemies
+      /*  //detect enemies
         Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, attackRange, enemyLayers);
         Collider[] bossHit = Physics.OverlapSphere(attackPoint.position, attackDamage, bossLayer);
         Collider[] newSlimes = Physics.OverlapSphere(attackPoint.position, attackDamage, newLayer);
@@ -80,25 +57,34 @@ public class Attacking : MonoBehaviour
             {
                 boss.GetComponent<SlimeBoss>().health -= 1;
             }
-        }
+        }*/
     }
 
-    private void OnDrawGizmosSelected()
-    {
-        if(attackPoint == null)
-            return;
-        }
-        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
-    }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Switch")
+        Debug.Log(other.name); 
+        if (other.tag == "Switch" && other.GetComponent<CutsceneSwitch>().used == false)
         {
-            atSwitch = true;
-            CurSwitch = other.gameObject;
-            SwitchInstance = CurSwitch.GetComponent<CutsceneSwitch>();
+            other.GetComponent<CutsceneSwitch>().PlayTimeline();
+            other.GetComponent<CutsceneSwitch>().SwitchCount += 1;
         }
-    }
+        
+        if (other.tag == "Enemy")
         {
+            if (other.GetComponent<EnemySlime>())
+            {
+                other.GetComponent<EnemySlime>().health -= 1;
+                other.GetComponent<EnemySlime>().hit_slime = true;
+            }
+            else if (other.GetComponent<SlimeBoss>())
+            {
+                other.GetComponent<SlimeBoss>().health -= 1; 
+            }
+            else if (other.GetComponent<SlimeScript>())
+            {
+                other.GetComponent<SlimeScript>().TakeDamage(attackDamage);
+            }
+        }    
+    }
 }

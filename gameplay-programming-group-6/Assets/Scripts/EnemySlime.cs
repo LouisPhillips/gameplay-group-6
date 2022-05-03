@@ -97,15 +97,15 @@ public class EnemySlime : MonoBehaviour
             damagedTime += Time.deltaTime;
             if (damagedTime < 0.1)
             {
-                gameObject.GetComponent<MeshRenderer>().material = healthy;
+                gameObject.GetComponent<MeshRenderer>().material.SetColor("_Color", Color.white);
             }
             else if (damagedTime < 0.2 && damagedTime > 0.1)
             {
-                gameObject.GetComponent<MeshRenderer>().material = damaged;
+                gameObject.GetComponent<MeshRenderer>().material.SetColor("_Color", Color.red); 
             }
             else if (damagedTime > 0.2)
             {
-                gameObject.GetComponent<MeshRenderer>().material = healthy;
+                gameObject.GetComponent<MeshRenderer>().material.SetColor("_Color", Color.white);
                 damagedTime = 0f;
                 hit_slime = false;
             }
@@ -308,8 +308,10 @@ public class EnemySlime : MonoBehaviour
                 }
                 break;
             case ENEMYSTATE.attacking:
+
                 transform.LookAt(player);
                 transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y - 90, 0);
+
                 if (!canAttack)
                 {
                     attackDelay += Time.deltaTime;
@@ -324,12 +326,16 @@ public class EnemySlime : MonoBehaviour
                     }
 
                 }
-                if (Physics.BoxCast(transform.position, transform.localScale / 2, player.transform.position - transform.position, transform.rotation, Vector3.Distance(transform.position, player.transform.position) - 3))
+                else
+                {
+                    Attack();
+                }
+                if (Vector3.Distance(transform.position, player.transform.position) > 3)
                 {
                     transform.Translate(Vector3.forward);
-                    
                 }
-                Attack();
+
+
                 if (found && Vector3.Distance(player.position, transform.position) > 5F)
                 {
                     enemyState = ENEMYSTATE.looking;

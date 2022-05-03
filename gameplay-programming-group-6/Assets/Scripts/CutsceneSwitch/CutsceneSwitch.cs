@@ -21,7 +21,7 @@ public class CutsceneSwitch : MonoBehaviour
     PlayerControls animatorControls;
 
     public int SwitchCount;
-    void Start()
+    void Awake()
     {
         director = TimelineObject.GetComponent<PlayableDirector>();
         playerControls = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>().controls;
@@ -41,16 +41,18 @@ public class CutsceneSwitch : MonoBehaviour
         animatorControls.Disable();
         StartCoroutine(TimeDelay());
 
-        if (SwitchCount == 3)
-        {
-            BossTimeline();
-        }
+        playerControls.Enable();
+        camControls.Enable();
+        animatorControls.Enable();
     }
 
     public void BossTimeline()
     {
         BossDirector.Play();
         StartCoroutine(BossDelay());
+        playerControls.Enable();
+        camControls.Enable();
+        animatorControls.Enable();
     }
 
     IEnumerator TimeDelay()
@@ -58,9 +60,6 @@ public class CutsceneSwitch : MonoBehaviour
         yield return new WaitForSeconds(timelineduration);
         PlayerCamera.enabled = true;
         CutsceneCamera.enabled = false;
-        playerControls.Enable();
-        camControls.Enable();
-        animatorControls.Enable();
     }
 
     IEnumerator BossDelay()

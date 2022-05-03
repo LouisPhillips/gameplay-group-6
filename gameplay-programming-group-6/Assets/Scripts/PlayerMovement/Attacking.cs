@@ -14,6 +14,8 @@ public class Attacking : MonoBehaviour
     public float attackRange = 0.5f;
     public int attackDamage = 1;
 
+    public int SwitchesUsed = 0;
+
     bool attacking;
 
     PlayerControls controls;
@@ -67,7 +69,12 @@ public class Attacking : MonoBehaviour
         if (other.tag == "Switch" && other.GetComponent<CutsceneSwitch>().used == false)
         {
             other.GetComponent<CutsceneSwitch>().PlayTimeline();
-            other.GetComponent<CutsceneSwitch>().SwitchCount += 1;
+            SwitchesUsed += 1;
+            if (SwitchesUsed == 3)
+            {
+                other.GetComponent<CutsceneSwitch>().BossTimeline();
+            }
+            other.GetComponent<CutsceneSwitch>().used = true;
         }
         
         if (other.tag == "Enemy")

@@ -7,7 +7,6 @@ public class IntroScript : MonoBehaviour
 {
     public Camera CutsceneCamera;
     public Camera PlayerCamera;
-    public bool used = false;
     public float timelineduration;
     PlayerControls playerControls;
     PlayerControls camControls;
@@ -26,6 +25,9 @@ public class IntroScript : MonoBehaviour
         PlayerCamera.enabled = false;
 
         StartCoroutine(TimeDelay());
+        playerControls.Enable();
+        camControls.Enable();
+        animatorControls.Enable();
     }
 
     IEnumerator TimeDelay()
@@ -33,8 +35,5 @@ public class IntroScript : MonoBehaviour
         yield return new WaitForSeconds(timelineduration);
         PlayerCamera.enabled = true;
         CutsceneCamera.enabled = false;
-        playerControls.Enable();
-        camControls.Enable();
-        animatorControls.Enable();
     }
 }

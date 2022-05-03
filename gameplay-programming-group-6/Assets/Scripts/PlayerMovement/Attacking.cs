@@ -38,7 +38,7 @@ public class Attacking : MonoBehaviour
 
     public void Hit()
     {
-      /*  //detect enemies
+        //detect enemies
         Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, attackRange, enemyLayers);
         Collider[] bossHit = Physics.OverlapSphere(attackPoint.position, attackDamage, bossLayer);
         Collider[] newSlimes = Physics.OverlapSphere(attackPoint.position, attackDamage, newLayer);
@@ -59,7 +59,7 @@ public class Attacking : MonoBehaviour
             {
                 boss.GetComponent<SlimeBoss>().health -= 1;
             }
-        }*/
+        }
     }
 
 
@@ -72,7 +72,7 @@ public class Attacking : MonoBehaviour
             SwitchesUsed += 1;
             if (SwitchesUsed == 3)
             {
-                other.GetComponent<CutsceneSwitch>().BossTimeline();
+                other.GetComponent<CutsceneSwitch>().allSwitch = true;
             }
             other.GetComponent<CutsceneSwitch>().used = true;
         }

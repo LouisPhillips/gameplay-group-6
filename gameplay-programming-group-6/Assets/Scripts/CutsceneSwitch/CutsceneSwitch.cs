@@ -16,6 +16,7 @@ public class CutsceneSwitch : MonoBehaviour
     public Camera PlayerCamera;
     public bool used = false;
     public float timelineduration;
+    public bool allSwitch = false;
     PlayerControls playerControls;
     PlayerControls camControls;
     PlayerControls animatorControls;
@@ -56,6 +57,20 @@ public class CutsceneSwitch : MonoBehaviour
     }
 
     IEnumerator TimeDelay()
+    {
+        yield return new WaitForSeconds(timelineduration);
+        if (allSwitch)
+        {
+            BossTimeline();
+        }
+        else 
+        {
+            PlayerCamera.enabled = true;
+            CutsceneCamera.enabled = false;
+        }
+    }
+
+    IEnumerator SwitchDoorDelay()
     {
         yield return new WaitForSeconds(timelineduration);
         PlayerCamera.enabled = true;

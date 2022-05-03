@@ -50,10 +50,10 @@ public class CamControls : MonoBehaviour
     {
         if (lockedOn)
         {
-            Vector3 midpoint = (lockOnTarget.transform.position + target.position) / 2;
+            Vector3 midpoint = ((lockOnTarget.transform.position + target.position) / 2);
             player.LookAt(lockOnTarget.transform);
             player.rotation = Quaternion.Euler(0, player.eulerAngles.y, 0); 
-            transform.position = midpoint + (-transform.forward * Vector3.Distance(lockOnTarget.transform.position, target.position)) + transform.up ;
+            transform.position = midpoint + (-transform.forward * Vector3.Distance(lockOnTarget.transform.position, target.position)) + transform.up - transform.forward ;
             transform.rotation = player.rotation; 
             targeter.position = new Vector3(lockOnTarget.transform.position.x, lockOnTarget.transform.position.y + lockOnTarget.transform.localScale.y, lockOnTarget.transform.position.z); 
 

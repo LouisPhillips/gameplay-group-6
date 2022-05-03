@@ -9,11 +9,19 @@ public class IntroScript : MonoBehaviour
     public Camera PlayerCamera;
     public bool used = false;
     public float timelineduration;
-
+    PlayerControls playerControls;
+    PlayerControls camControls;
+    PlayerControls animatorControls; 
 
     // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
+        playerControls = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>().controls;
+        camControls = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CamControls>().controls;
+        animatorControls = GameObject.FindGameObjectWithTag("Player").GetComponent<AnimatorController>().controls;
+        playerControls.Disable();
+        camControls.Disable();
+        animatorControls.Disable();
         CutsceneCamera.enabled = true;
         PlayerCamera.enabled = false;
 
@@ -25,5 +33,8 @@ public class IntroScript : MonoBehaviour
         yield return new WaitForSeconds(timelineduration);
         PlayerCamera.enabled = true;
         CutsceneCamera.enabled = false;
+        playerControls.Enable();
+        camControls.Enable();
+        animatorControls.Enable();
     }
 }

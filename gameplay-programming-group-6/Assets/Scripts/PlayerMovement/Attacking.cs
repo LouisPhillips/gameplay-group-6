@@ -34,6 +34,22 @@ public class Attacking : MonoBehaviour
     }
     public void Attack()
     {
+       
+
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if(attackPoint == null)
+        {
+            return;
+        }
+
+        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+    }
+
+   public void Hit()
+    {
         //play animation
         animator.SetTrigger("Attack");
 
@@ -48,10 +64,10 @@ public class Attacking : MonoBehaviour
         Collider[] bossHit = Physics.OverlapSphere(attackPoint.position, attackDamage, bossLayer);
         Collider[] newSlimes = Physics.OverlapSphere(attackPoint.position, attackDamage, newLayer);
         //damage
+
         foreach (Collider enemy in hitEnemies)
         {
             enemy.GetComponent<SlimeScript>().TakeDamage(attackDamage);
-            
         }
         foreach (Collider newslime in newSlimes)
         {
@@ -60,18 +76,16 @@ public class Attacking : MonoBehaviour
         }
         foreach (Collider boss in bossHit)
         {
-            if(boss.GetComponent<SlimeBoss>().bossCanBeDamaged)
+            if (boss.GetComponent<SlimeBoss>().bossCanBeDamaged)
             {
                 boss.GetComponent<SlimeBoss>().health -= 1;
             }
-            
         }
     }
 
     private void OnDrawGizmosSelected()
     {
         if(attackPoint == null)
-        {
             return;
         }
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);
@@ -86,4 +100,5 @@ public class Attacking : MonoBehaviour
             SwitchInstance = CurSwitch.GetComponent<CutsceneSwitch>();
         }
     }
+        {
 }

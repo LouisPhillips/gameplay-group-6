@@ -14,43 +14,57 @@ public class AnimatorController : MonoBehaviour
     int AttackHash;
     int JumpHash;
     int DanceHash;
-    PlayerControls controls;
+    int InAirHash; 
+    public PlayerControls controls;
     Vector2 stickDirection;
     bool movementPressed;
-    bool runpressed;
-    bool attackpressed;
+    bool runPressed;
+    bool attackPressed;
+    bool jumpPressed; 
+    bool canAttack;
+    
+    PlayerMovement script; 
+
 
     private void Awake()
     {
         controls = new PlayerControls();
         //moving the joystick
+
         controls.Player.Move.performed += context =>
         {
             stickDirection = context.ReadValue<Vector2>();
-            movementPressed = stickDirection.x >= 0.5 || stickDirection.y >= 0.5 || stickDirection.x <= -0.5 || stickDirection.y <= -0.5;
-        };
-        controls.Player.Sprint.performed += context => runpressed = context.ReadValueAsButton();
-        controls.Player.Attack.performed += context => attackpressed = context.ReadValueAsButton();
-        controls.Player.Attack.canceled += context => attackpressed = context.ReadValueAsButton();
-        controls.Player.Sprint.canceled += context => runpressed = context.ReadValueAsButton();
-
-        //stickDirection = context.ReadValue<Vector2>();
-
-
+            movementPressed = stickDirection.x >= 0.2 || stickDirection.y >= 0.2 || stickDirection.x <= -0.2 || stickDirection.y <= -0.2;
+        }; 
         //releasing the joystick
-        controls.Player.Move.canceled += context => stickDirection = Vector2.zero;
-    }
-    void Start()
-    {
+        controls.Player.Move.canceled += context =>
+        {
+            stickDirection = new Vector2(0, 0);
+            movementPressed = false; 
+        }; 
+
+        controls.Player.Sprint.performed += context => runPressed = context.ReadValueAsButton();
+        controls.Player.Attack.performed += context => attackPressed = context.ReadValueAsButton();
+        controls.Player.Attack.canceled += context => attackPressed = context.ReadValueAsButton();
+        controls.Player.Sprint.canceled += context => runPressed = context.ReadValueAsButton();
+        controls.Player.Attack.canceled += context => canAttack = true;
+        controls.Player.Jump.performed += context => jumpPressed = context.ReadValueAsButton();
+        controls.Player.Jump.canceled += context => jumpPressed = context.ReadValueAsButton();
+
+
         animator = GetComponent<Animator>();
+        script = GetComponent<PlayerMovement>();
         WalkingHash = Animator.StringToHash("WalkingState");
         RunningHash = Animator.StringToHash("RunningState");
         AttackHash = Animator.StringToHash("Attacking");
+        JumpHash = Animator.StringToHash("Jump");
+        InAirHash = Animator.StringToHash("InAir");
         DanceHash = Animator.StringToHash("Dancing");
+ 
     }
+
     private void Update()
     {
-
         handleMovement();
     }
     void handleMovement()
@@ -59,37 +73,20 @@ public class AnimatorController : MonoBehaviour
         bool isRunning = animator.GetBool(RunningHash);
         bool isAttacking = animator.GetBool(AttackHash);
 
-        if (movementPressed && !isWalking)
-        {
-            animator.SetBool(WalkingHash, true);
-        }
-        if (!movementPressed && isWalking)
-        {
-            animator.SetBool(WalkingHash, false);
-        }
-        if ((movementPressed && runpressed) && !isRunning)
-        {
-            animator.SetBool(RunningHash, true);
-        }
-        if ((!movementPressed || !runpressed) && isRunning)
-        {
-            animator.SetBool(RunningHash, false);
-        }
-        if (attackpressed && !isAttacking)
-        {
-            animator.SetBool(AttackHash, true);
-            transform.GetComponent<Attacking>().Attack();
-        }
-        if (!attackpressed && isAttacking)
-        {
-            animator.SetBool(AttackHash, false);
-        }
+        canAttack = !animator.GetCurrentAnimatorStateInfo(0).IsName("Attack");
+        animator.SetBool(WalkingHash, movementPressed);
+        animator.SetBool(RunningHash, runPressed && movementPressed);
+        animator.SetBool(AttackHash, attackPressed && canAttack);
+        animator.SetBool(JumpHash, (script.slidingGrounded && GetComponent<Rigidbody>().velocity.y > 0.1f));
+        animator.SetBool(InAirHash, (!script.grounded));
 
     }
+
     private void OnEnable()
     {
         controls.Player.Enable();
     }
+
     private void OnDisable()
     {
         controls.Player.Disable();

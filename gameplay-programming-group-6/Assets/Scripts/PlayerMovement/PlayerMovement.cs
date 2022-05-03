@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
 
-    PlayerControls controls;
+    public PlayerControls controls;
 
     Animator anim;
     HashIDs hash;
@@ -55,8 +55,8 @@ public class PlayerMovement : MonoBehaviour
 
     /// Jump
     private bool jumpPressed = false;
-    private bool grounded;
-    private bool slidingGrounded;
+    public bool grounded;
+    public bool slidingGrounded;
     private bool falling;
     private bool doubleJump = false;
 
@@ -114,8 +114,6 @@ public class PlayerMovement : MonoBehaviour
         controls.Player.Disable();
     }
 
-
-
     private void FixedUpdate()
     {
         if (stickDirection.y > 0.1)
@@ -150,36 +148,38 @@ public class PlayerMovement : MonoBehaviour
             falling = true;
         }
 
-        Physics.Raycast(transform.position + transform.up, -transform.up, out hit, 1.5f);
-
-        if (hit.transform.tag == "Slide")
+        if (Physics.Raycast(transform.position + transform.up, -transform.up, out hit, 1.5f))
         {
-            transform.rotation = Quaternion.Euler(transform.eulerAngles.x, hit.transform.eulerAngles.y, transform.eulerAngles.z);
-            physMat.staticFriction = 0;
-            physMat.dynamicFriction = 0;
-            physMat.bounciness = 0;
-            physMat.frictionCombine = PhysicMaterialCombine.Minimum;
-            physMat.bounceCombine = PhysicMaterialCombine.Minimum;
 
-            if (sliding == false)
+            if (hit.transform.tag == "Slide")
             {
-                GetComponent<Rigidbody>().AddForce((transform.forward - transform.up) * 5, ForceMode.Impulse);
+                transform.rotation = Quaternion.Euler(transform.eulerAngles.x, hit.transform.eulerAngles.y, transform.eulerAngles.z);
+                physMat.staticFriction = 0;
+                physMat.dynamicFriction = 0;
+                physMat.bounciness = 0;
+                physMat.frictionCombine = PhysicMaterialCombine.Minimum;
+                physMat.bounceCombine = PhysicMaterialCombine.Minimum;
+
+                if (sliding == false)
+                {
+                    GetComponent<Rigidbody>().AddForce((transform.forward - transform.up) * 5, ForceMode.Impulse);
+                }
+
+                sliding = true;
+
             }
+            else if (hit.transform.tag == "EndSlide")
+            {
+                sliding = false;
+                physMat.staticFriction = 0.6f;
+                physMat.dynamicFriction = 0.6f;
+                physMat.bounciness = 0;
+                physMat.frictionCombine = PhysicMaterialCombine.Average;
+                physMat.bounceCombine = PhysicMaterialCombine.Average;
 
-            sliding = true;
-           
+            }
         }
-        else if (hit.transform.tag == "EndSlide")
-        {
-            sliding = false;
-            physMat.staticFriction = 0.6f;
-            physMat.dynamicFriction = 0.6f;
-            physMat.bounciness = 0;
-            physMat.frictionCombine = PhysicMaterialCombine.Average;
-            physMat.bounceCombine = PhysicMaterialCombine.Average;
-
-        }
-        if (!slidingGrounded && GetComponent<Rigidbody>().velocity.y < -10 && !takeNoDamage)
+            if (!slidingGrounded && GetComponent<Rigidbody>().velocity.y < -10 && !takeNoDamage)
         {
             health += -1;
         }
@@ -255,16 +255,16 @@ public class PlayerMovement : MonoBehaviour
             }
 
         }
+
         if (canShrinkBoost)
         {
             transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
         }
         else
         {
-            if (canResize)
+            if (canResize && shrinkBoost)
             {
                 transform.localScale = new Vector3(1, 1, 1);
-                shrinkBoost.resized = true;
             }
         }
 

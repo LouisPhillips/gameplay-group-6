@@ -114,6 +114,7 @@ public class EnemySlime : MonoBehaviour
         if (enemyState != ENEMYSTATE.attacking)
         {
             anim.SetBool(hash.slimeLockOnState, false); 
+
             if (coneHit)
             {
                 Vector3 dir = (player.transform.position - transform.position).normalized;

@@ -74,8 +74,15 @@ public class AnimatorController : MonoBehaviour
         bool isAttacking = animator.GetBool(AttackHash);
 
         canAttack = !animator.GetCurrentAnimatorStateInfo(0).IsName("Attack");
-        animator.SetBool(WalkingHash, movementPressed);
-        animator.SetBool(RunningHash, runPressed && movementPressed);
+        if (!script.sliding)
+        {
+            animator.SetBool(WalkingHash, movementPressed);
+            animator.SetBool(RunningHash, runPressed && movementPressed);
+        }
+        else 
+        { 
+            animator.SetBool(WalkingHash, false);  
+        }
         animator.SetBool(AttackHash, attackPressed && canAttack);
         animator.SetBool(JumpHash, (script.slidingGrounded && GetComponent<Rigidbody>().velocity.y > 0.1f));
         animator.SetBool(InAirHash, (!script.grounded));

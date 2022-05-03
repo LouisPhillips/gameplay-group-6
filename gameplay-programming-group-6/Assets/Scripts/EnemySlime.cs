@@ -14,9 +14,10 @@ public class EnemySlime : MonoBehaviour
     public float preWait;
     public float postWait;
     public float lookAngle; 
-    public float movementDistance;
+    private float movementDistance = 30;
     public float nearAngle; 
     public GameObject[] PatrolArea;
+    private float distance = 5; 
 
     private Transform player;
     private Quaternion originalRot;
@@ -94,16 +95,20 @@ public class EnemySlime : MonoBehaviour
 
         if (hit_slime)
         {
+            transform.LookAt(player);
+            target = player; 
+            transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y - 90, 0);
+            enemyState = ENEMYSTATE.attacking;
             damagedTime += Time.deltaTime;
             if (damagedTime < 0.1)
             {
                 gameObject.GetComponent<MeshRenderer>().material.SetColor("_Color", Color.white);
             }
-            else if (damagedTime < 0.2 && damagedTime > 0.1)
+            else if (damagedTime < 0.4 && damagedTime > 0.1)
             {
                 gameObject.GetComponent<MeshRenderer>().material.SetColor("_Color", Color.red); 
             }
-            else if (damagedTime > 0.2)
+            else if (damagedTime > 0.4)
             {
                 gameObject.GetComponent<MeshRenderer>().material.SetColor("_Color", Color.white);
                 damagedTime = 0f;
@@ -308,12 +313,10 @@ public class EnemySlime : MonoBehaviour
                 }
                 break;
             case ENEMYSTATE.attacking:
-
+                anim.SetBool(hash.slimeLockOnState, true); 
                 transform.LookAt(player);
                 transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y - 90, 0);
 
-                if (!canAttack)
-                {
                     attackDelay += Time.deltaTime;
                     if (attackDelay < attackTime)
                     {
@@ -324,17 +327,13 @@ public class EnemySlime : MonoBehaviour
                         canAttack = true;
                         attackDelay = 0f;
                     }
+                Attack();
 
-                }
-                else
+                if (Vector3.Distance(transform.position, player.transform.position) > distance)
                 {
-                    Attack();
+                    transform.Translate(Vector3.right * Time.deltaTime * speed);
                 }
-                if (Vector3.Distance(transform.position, player.transform.position) > 3)
-                {
-                    transform.Translate(Vector3.forward);
-                }
-
+            
 
                 if (found && Vector3.Distance(player.position, transform.position) > 5F)
                 {
@@ -351,9 +350,9 @@ public class EnemySlime : MonoBehaviour
     {
         if (canAttack)
         {
-            if (target.GetComponent<PlayerMovement>().takeNoDamage == false)
+            if (player.parent.GetComponent<PlayerMovement>().takeNoDamage == false)
             {
-                target.GetComponent<PlayerMovement>().health -= 1;
+                player.parent.GetComponent<PlayerMovement>().health -= 1;
             }
             canAttack = false;
         }

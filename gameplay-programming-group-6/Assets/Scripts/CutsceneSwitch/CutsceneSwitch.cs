@@ -16,14 +16,16 @@ public class CutsceneSwitch : MonoBehaviour
     public Camera PlayerCamera;
     public bool used = false;
     public float timelineduration;
+    public bool allSwitch = false;
     PlayerControls playerControls;
     PlayerControls camControls;
     PlayerControls animatorControls;
 
     public int SwitchCount;
-    void Start()
+    void Awake()
     {
         director = TimelineObject.GetComponent<PlayableDirector>();
+        BossDirector = BossObject.GetComponent<PlayableDirector>(); 
         playerControls = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>().controls;
         camControls = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CamControls>().controls;
         animatorControls = GameObject.FindGameObjectWithTag("Player").GetComponent<AnimatorController>().controls;
@@ -41,26 +43,39 @@ public class CutsceneSwitch : MonoBehaviour
         animatorControls.Disable();
         StartCoroutine(TimeDelay());
 
-        if (SwitchCount == 3)
-        {
-            BossTimeline();
-        }
+        playerControls.Enable();
+        camControls.Enable();
+        animatorControls.Enable();
     }
 
     public void BossTimeline()
     {
         BossDirector.Play();
         StartCoroutine(BossDelay());
+        playerControls.Enable();
+        camControls.Enable();
+        animatorControls.Enable();
     }
 
     IEnumerator TimeDelay()
     {
         yield return new WaitForSeconds(timelineduration);
+        if (allSwitch)
+        {
+            BossTimeline();
+        }
+        else
+        {
+            PlayerCamera.enabled = true;
+            CutsceneCamera.enabled = false;
+        }
+    }
+
+    IEnumerator SwitchDoorDelay()
+    {
+        yield return new WaitForSeconds(timelineduration);
         PlayerCamera.enabled = true;
         CutsceneCamera.enabled = false;
-        playerControls.Enable();
-        camControls.Enable();
-        animatorControls.Enable();
     }
 
     IEnumerator BossDelay()

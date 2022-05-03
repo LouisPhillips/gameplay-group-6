@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 171135198649456612}
   m_Layer: 3
   m_Name: Slime
-  m_TagString: Lockable
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -178,7 +178,7 @@ GameObject:
   - component: {fileID: 3029953577454135807}
   m_Layer: 0
   m_Name: SmallMinion
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -30,7 +30,7 @@ public class PlayerMovement : MonoBehaviour
     public float jumpPower;
     public float turnSpeed;
     public float groundCheckLength;
-    private bool sliding = false;
+    public bool sliding = false;
     private PhysicMaterial physMat;
     private Renderer renderer;
     public bool lockOn; 
@@ -116,10 +116,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (stickDirection.y > 0.1)
-        {
 
-        }
         RaycastHit hit;
 
         slidingGrounded = Physics.Raycast(transform.position + transform.up, -transform.up, out hit, 1.5f);
@@ -179,7 +176,7 @@ public class PlayerMovement : MonoBehaviour
 
             }
         }
-            if (!slidingGrounded && GetComponent<Rigidbody>().velocity.y < -10 && !takeNoDamage)
+            if (!slidingGrounded && GetComponent<Rigidbody>().velocity.y < -10 && !takeNoDamage && !sliding)
         {
             health += -1;
         }
